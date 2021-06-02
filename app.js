@@ -10,7 +10,7 @@ var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 
-const auth = require('./services/authorization');
+const auth = require('./services/authorization').authorization;
 
 var app = express();
 
@@ -32,7 +32,8 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('12345-67890-09876-54321'));
+
 app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -59,4 +60,7 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+app.listen(3000, () => {
+  console.log('Listening on port 3000');
+})
 module.exports = app;
