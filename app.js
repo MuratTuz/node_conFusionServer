@@ -22,7 +22,8 @@ const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
 
 const url = 'mongodb://localhost:27017/conFusion';
-const connect = mongoose.connect(url);
+const docker_url = 'mongodb://localhost:2717/conFusion';
+const connect = mongoose.connect(docker_url);
 
 connect.then((db) => {
   console.log("Connected correctly to server");
@@ -44,11 +45,11 @@ app.use(session({
   store: new FileStore()
 }));
 
-app.use(auth.sessionControl);
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use(auth.sessionControlWithDb);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/dishes', dishRouter);
 app.use('/promotions', promoRouter);
