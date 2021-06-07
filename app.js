@@ -11,6 +11,9 @@ var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 
 const auth = require('./services/authorization');
+var passport = require('passport');
+var authenticate = require('./services/authenticate');
+var config = require('./config');
 
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
@@ -21,7 +24,7 @@ const mongoose = require('mongoose');
 
 const Dishes = require('./models/dishes');
 
-const url = 'mongodb://localhost:27017/conFusion';
+//const url = 'mongodb://localhost:27017/conFusion';
 const docker_url = 'mongodb://localhost:2717/conFusion';
 const connect = mongoose.connect(docker_url);
 
@@ -45,10 +48,13 @@ app.use(session({
   store: new FileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use(auth.sessionControlWithDb);
+app.use(auth.auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/dishes', dishRouter);

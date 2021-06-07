@@ -7,12 +7,25 @@ function unAuthenticated(res, next) {
     next(err);
 }
 
+exports.auth = (req, res, next) => {
+    console.log(req.user);
+
+    if (!req.user) {
+      var err = new Error('You are not authenticated!');
+      err.status = 403;
+      next(err);
+    }
+    else {
+          next();
+    }
+}
+
 exports.basicAuth = (req, res, next) => {
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        unAuthenticated(res, next);
-        return;
+        return unAuthenticated(res, next);
+        
     }
 
     // to get ausername and password from the header 'authenticate:Basic encoded_string_for_username:password'
@@ -49,8 +62,7 @@ exports.authorization = (req, res, next) => {
     if (!req.signedCookies.murat) {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
-            unAuthenticated(res, next);
-            return;
+            return unAuthenticated(res, next);
         }
 
         // to get ausername and password from the header 'authenticate:Basic encoded_string_for_username:password'
