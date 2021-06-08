@@ -8,7 +8,7 @@ function unAuthenticated(res, next) {
 }
 
 exports.auth = (req, res, next) => {
-    console.log(req.user);
+    console.log('auth user ',req.user);
 
     if (!req.user) {
       var err = new Error('You are not authenticated!');
